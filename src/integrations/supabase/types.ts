@@ -14,7 +14,146 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          city: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          level: number
+          streak_days: number
+          total_area_km2: number
+          total_distance_km: number
+          total_runs: number
+          updated_at: string
+          username: string | null
+          xp: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          level?: number
+          streak_days?: number
+          total_area_km2?: number
+          total_distance_km?: number
+          total_runs?: number
+          updated_at?: string
+          username?: string | null
+          xp?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          level?: number
+          streak_days?: number
+          total_area_km2?: number
+          total_distance_km?: number
+          total_runs?: number
+          updated_at?: string
+          username?: string | null
+          xp?: number
+        }
+        Relationships: []
+      }
+      runs: {
+        Row: {
+          area_captured_m2: number
+          avg_pace_min_per_km: number | null
+          calories: number
+          created_at: string
+          distance_km: number
+          duration_seconds: number
+          ended_at: string | null
+          id: string
+          is_closed_loop: boolean
+          path: Json
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          area_captured_m2?: number
+          avg_pace_min_per_km?: number | null
+          calories?: number
+          created_at?: string
+          distance_km?: number
+          duration_seconds?: number
+          ended_at?: string | null
+          id?: string
+          is_closed_loop?: boolean
+          path?: Json
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          area_captured_m2?: number
+          avg_pace_min_per_km?: number | null
+          calories?: number
+          created_at?: string
+          distance_km?: number
+          duration_seconds?: number
+          ended_at?: string | null
+          id?: string
+          is_closed_loop?: boolean
+          path?: Json
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      territories: {
+        Row: {
+          area_m2: number
+          center_lat: number | null
+          center_lng: number | null
+          city: string | null
+          created_at: string
+          id: string
+          name: string | null
+          polygon: Json
+          run_id: string | null
+          user_id: string
+        }
+        Insert: {
+          area_m2?: number
+          center_lat?: number | null
+          center_lng?: number | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name?: string | null
+          polygon: Json
+          run_id?: string | null
+          user_id: string
+        }
+        Update: {
+          area_m2?: number
+          center_lat?: number | null
+          center_lng?: number | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name?: string | null
+          polygon?: Json
+          run_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "territories_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
