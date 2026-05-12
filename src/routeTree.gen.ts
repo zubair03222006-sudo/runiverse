@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRunRouteImport } from './routes/_authenticated/run'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedMapRouteImport } from './routes/_authenticated/map'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthenticatedRunRoute = AuthenticatedRunRouteImport.update({
   id: '/run',
   path: '/run',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedMapRoute = AuthenticatedMapRouteImport.update({
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/map': typeof AuthenticatedMapRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/run': typeof AuthenticatedRunRoute
 }
 export interface FileRoutesByTo {
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/map': typeof AuthenticatedMapRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/run': typeof AuthenticatedRunRoute
 }
 export interface FileRoutesById {
@@ -77,13 +85,28 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/map': typeof AuthenticatedMapRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/run': typeof AuthenticatedRunRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/leaderboard' | '/map' | '/run'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/leaderboard'
+    | '/map'
+    | '/profile'
+    | '/run'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/leaderboard' | '/map' | '/run'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/leaderboard'
+    | '/map'
+    | '/profile'
+    | '/run'
   id:
     | '__root__'
     | '/'
@@ -92,6 +115,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/leaderboard'
     | '/_authenticated/map'
+    | '/_authenticated/profile'
     | '/_authenticated/run'
   fileRoutesById: FileRoutesById
 }
@@ -131,6 +155,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRunRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/map': {
       id: '/_authenticated/map'
       path: '/map'
@@ -159,6 +190,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedMapRoute: typeof AuthenticatedMapRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRunRoute: typeof AuthenticatedRunRoute
 }
 
@@ -166,6 +198,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedMapRoute: AuthenticatedMapRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRunRoute: AuthenticatedRunRoute,
 }
 
