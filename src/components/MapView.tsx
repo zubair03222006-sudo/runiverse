@@ -96,7 +96,7 @@ export function MapView({
       if (t.polygon.length < 3) return;
       const color = t.ownedByMe ? "#138808" : "#FF3355";
       L.polygon(
-        t.polygon.map((p) => [p.lat, p.lng]),
+        t.polygon.map((p) => [p.lat, p.lng] as L.LatLngTuple),
         {
           color,
           weight: 2,
@@ -109,7 +109,7 @@ export function MapView({
     // track path
     if (trackPath.length > 1) {
       L.polyline(
-        trackPath.map((p) => [p.lat, p.lng]),
+        trackPath.map((p) => [p.lat, p.lng] as L.LatLngTuple),
         { color: "#FF6B35", weight: 5, opacity: 0.95 }
       ).addTo(layer);
     }
@@ -117,7 +117,7 @@ export function MapView({
     // draft polygon (about-to-capture)
     if (draftPolygon && draftPolygon.length >= 3) {
       L.polygon(
-        draftPolygon.map((p) => [p.lat, p.lng]),
+        draftPolygon.map((p) => [p.lat, p.lng] as L.LatLngTuple),
         {
           color: "#FFD166",
           weight: 2,
