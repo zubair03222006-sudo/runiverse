@@ -128,33 +128,63 @@ function RunPage() {
             className="h-full w-full"
             center={tracker.current ?? { lat: 12.9716, lng: 77.5946 }}
             livePoint={tracker.current}
+            accuracy={tracker.accuracy}
+            heading={tracker.heading}
+            follow={follow}
             trackPath={path}
             draftPolygon={draftPoly}
             zoom={17}
-            interactive={false}
+            interactive={true}
           />
         )}
+        {/* Vignette for depth */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,transparent_55%,rgba(0,0,0,0.55)_100%)]" />
       </div>
 
       {/* Top stats overlay */}
-      <div className="absolute top-0 inset-x-0 p-4 pt-[max(1rem,env(safe-area-inset-top))]">
-        <div className="card-tactical p-4 flex items-center justify-between">
+      <div className="absolute top-0 inset-x-0 p-4 pt-[max(1rem,env(safe-area-inset-top))] animate-fade-in">
+        <div className="card-tactical p-4 flex items-center justify-between backdrop-blur-md bg-card/70">
           <div>
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Distance</div>
-            <div className="font-display text-2xl font-black text-saffron">
+            <div className="font-display text-2xl font-black text-saffron tabular-nums">
               {distanceKm.toFixed(2)}<span className="text-xs text-muted-foreground"> km</span>
             </div>
           </div>
           <div className="text-center">
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Time</div>
-            <div className="font-display text-2xl font-black">{formatDuration(tracker.seconds)}</div>
+            <div className="font-display text-2xl font-black tabular-nums">{formatDuration(tracker.seconds)}</div>
           </div>
           <div className="text-right">
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Pace</div>
-            <div className="font-display text-base font-black text-india-green">
-              {formatPace(distanceKm, tracker.seconds)}
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              {speedKmh != null && tracker.state === "running" ? "Speed" : "Pace"}
+            </div>
+            <div className="font-display text-base font-black text-india-green tabular-nums">
+              {speedKmh != null && tracker.state === "running"
+                ? `${speedKmh.toFixed(1)} km/h`
+                : formatPace(distanceKm, tracker.seconds)}
             </div>
           </div>
+        </div>
+
+        {/* GPS signal pill + recenter */}
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <div className={`pill bg-card/70 backdrop-blur-md border border-border ${signal.tone}`}>
+            <Satellite className="h-3 w-3" />
+            <span className="font-semibold">{signal.label}</span>
+            {acc != null && (
+              <span className="text-muted-foreground font-normal">±{Math.round(acc)}m</span>
+            )}
+            {tracker.state === "running" && (
+              <span className="ml-1 inline-block w-1.5 h-1.5 rounded-full bg-india-green animate-pulse" />
+            )}
+          </div>
+          <button
+            onClick={() => setFollow((f) => !f)}
+            className={`pill border transition-all hover-scale ${follow ? "bg-saffron/20 border-saffron/50 text-saffron" : "bg-card/70 backdrop-blur-md border-border"}`}
+          >
+            <Crosshair className={`h-3 w-3 ${follow ? "animate-pulse" : ""}`} />
+            {follow ? "Following" : "Recenter"}
+          </button>
         </div>
 
         {tracker.error && (
