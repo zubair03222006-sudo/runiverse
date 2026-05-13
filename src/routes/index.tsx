@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/use-auth";
-import { Flame, MapPin, Trophy, Zap, Shield } from "lucide-react";
+import { Flame, MapPin, Trophy, Zap, Shield, Globe } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -18,10 +18,10 @@ function Landing() {
     <div className="min-h-screen grad-warrior text-foreground">
       <div className="mx-auto max-w-screen-sm px-6 pt-16 pb-24">
         <div className="flex items-center gap-3">
-          <div className="text-3xl">🐅</div>
+          <div className="text-3xl">🏃</div>
           <div className="font-display text-xl font-extrabold tracking-tight">TERRA RUN</div>
-          <span className="pill ml-auto bg-india-green/20 text-india-green border border-india-green/30">
-            🇮🇳 India First
+          <span className="pill ml-auto bg-india-green/20 text-india-green border border-india-green/30 inline-flex items-center gap-1">
+            <Globe className="h-3 w-3" /> Worldwide
           </span>
         </div>
 
@@ -52,22 +52,22 @@ function Landing() {
         <div className="mt-14 grid grid-cols-2 gap-3">
           <Feature icon={<MapPin className="h-5 w-5" />} title="Capture Loops" desc="Bigger loop = bigger land." />
           <Feature icon={<Shield className="h-5 w-5" />} title="Defend Turf" desc="Rivals can invade — patrol it." />
-          <Feature icon={<Trophy className="h-5 w-5" />} title="Colony Wars" desc="DLF Phase 4 vs Phase 5. Live." />
-          <Feature icon={<Flame className="h-5 w-5" />} title="Festival Boosts" desc="Diwali, IPL, Holi events." />
+          <Feature icon={<Trophy className="h-5 w-5" />} title="City Wars" desc="Neighborhoods battle live." />
+          <Feature icon={<Flame className="h-5 w-5" />} title="Event Boosts" desc="Weekly XP multipliers." />
         </div>
 
         <div className="mt-10 card-tactical p-5">
           <div className="flex items-center gap-2">
             <Zap className="h-4 w-4 text-gold" />
-            <span className="text-xs font-bold uppercase tracking-wider text-gold">Match Day Today</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-gold">Weekend Boost</span>
           </div>
           <p className="mt-2 text-sm">
-            <span className="font-bold">2× XP</span> on every run. Bleed Blue. 💙
+            <span className="font-bold">2× XP</span> on every run. Lace up. 🔥
           </p>
         </div>
 
         <p className="mt-12 text-center text-[11px] text-muted-foreground">
-          "Picture abhi baaki hai mere dost." — your future Sheher Ka Sher
+          The streets are your map. Run. Capture. Defend.
         </p>
       </div>
     </div>

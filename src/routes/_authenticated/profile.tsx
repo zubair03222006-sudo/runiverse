@@ -62,7 +62,7 @@ function ProfilePage() {
   }
 
   async function share() {
-    const text = `I've captured ${(p?.total_area_km2 ?? 0).toFixed(2)} km² in ${p?.city ?? "India"} on Terra Run! 🐅 #TerraRun`;
+    const text = `I've captured ${(p?.total_area_km2 ?? 0).toFixed(2)} km² in ${p?.city ?? "my city"} on Terra Run! 🏃 #TerraRun`;
     if (navigator.share) {
       try { await navigator.share({ text, title: "Terra Run" }); } catch {}
     } else {
@@ -80,11 +80,11 @@ function ProfilePage() {
         <div className="relative">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 rounded-full grad-saffron flex items-center justify-center text-3xl glow-saffron">
-              🐅
+              🏃
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-display font-black text-xl truncate">{p?.display_name ?? "Warrior"}</div>
-              <div className="text-xs text-muted-foreground">@{p?.username ?? "—"} · {p?.city ?? "India"}</div>
+              <div className="font-display font-black text-xl truncate">{p?.display_name ?? "Runner"}</div>
+              <div className="text-xs text-muted-foreground">@{p?.username ?? "—"} · {p?.city ?? "—"}</div>
               <div className="mt-1 inline-flex items-center gap-2">
                 <span className="pill bg-saffron/15 text-saffron border border-saffron/30">LVL {lvl}</span>
                 <span className="text-[11px] font-bold text-gold">{titleFor(lvl)}</span>

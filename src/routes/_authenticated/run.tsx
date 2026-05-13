@@ -108,7 +108,7 @@ function RunPage() {
 
       toast.success(
         area_m2 > 0
-          ? `Captured ${(area_m2 / 1e6).toFixed(3)} km² 🐅`
+          ? `Captured ${(area_m2 / 1e6).toFixed(3)} km² 🏆`
           : "Run saved! No loop closed this time."
       );
       navigate({ to: "/dashboard" });

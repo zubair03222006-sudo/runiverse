@@ -40,7 +40,7 @@ function AuthPage() {
         if (data.session && data.user) {
           await supabase.from("profiles").update({ city, display_name: name || email.split("@")[0] }).eq("id", data.user.id);
         }
-        toast.success("Welcome, warrior! 🐅");
+        toast.success("Welcome, runner!");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -71,9 +71,9 @@ function AuthPage() {
     <div className="min-h-screen grad-warrior flex items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="text-4xl">🐅</div>
+          <div className="text-4xl">🏃</div>
           <h1 className="font-display text-3xl font-black mt-2">
-            {mode === "signup" ? "Join the Hunt" : "Welcome Back, Sher"}
+            {mode === "signup" ? "Join the Hunt" : "Welcome Back, Runner"}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             {mode === "signup" ? "Conquer your first street today." : "Your territory is waiting."}
@@ -83,8 +83,8 @@ function AuthPage() {
         <form onSubmit={submit} className="card-tactical p-6 space-y-3">
           {mode === "signup" && (
             <>
-              <Input label="Display Name" value={name} onChange={setName} placeholder="Sher Khan" />
-              <Input label="City" value={city} onChange={setCity} placeholder="Bengaluru" />
+              <Input label="Display Name" value={name} onChange={setName} placeholder="Your name" />
+              <Input label="City" value={city} onChange={setCity} placeholder="Your city" />
             </>
           )}
           <Input label="Email" type="email" value={email} onChange={setEmail} required />
