@@ -70,12 +70,12 @@ export function calcLevel(totalAreaKm2: number): number {
 }
 
 export const TITLES = [
-  { min: 1, label: "Naya Daudaku" },
-  { min: 11, label: "Gully Ka Gunda" },
-  { min: 26, label: "Sheher Ka Sher" },
-  { min: 51, label: "Rajya Ka Rakhwala" },
-  { min: 76, label: "Desh Ka Daudaku" },
-  { min: 100, label: "Maharaja of the Map" },
+  { min: 1, label: "Rookie Runner" },
+  { min: 11, label: "Street Scout" },
+  { min: 26, label: "City Hunter" },
+  { min: 51, label: "Region Ruler" },
+  { min: 76, label: "National Champion" },
+  { min: 100, label: "Global Legend" },
 ];
 
 export function titleFor(level: number): string {

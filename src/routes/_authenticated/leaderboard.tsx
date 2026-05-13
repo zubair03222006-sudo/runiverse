@@ -57,7 +57,7 @@ function LeaderboardPage() {
           onClick={() => setTab("global")}
           className={`px-4 py-2 rounded-full ${tab === "global" ? "grad-saffron text-primary-foreground" : "text-muted-foreground"}`}
         >
-          🌏 India
+          🌏 Global
         </button>
         <button
           onClick={() => setTab("city")}
@@ -85,9 +85,9 @@ function LeaderboardPage() {
                 {i === 0 ? <Crown className="h-5 w-5 text-gold mx-auto" /> : `#${i + 1}`}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-bold truncate">{r.display_name ?? "Anon Sher"}</div>
+                <div className="font-bold truncate">{r.display_name ?? "Anonymous"}</div>
                 <div className="text-[11px] text-muted-foreground truncate">
-                  LVL {lvl} · {titleFor(lvl)} · {r.city ?? "India"}
+                  LVL {lvl} · {titleFor(lvl)} · {r.city ?? "—"}
                 </div>
               </div>
               <div className="text-right">

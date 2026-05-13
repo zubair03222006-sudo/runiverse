@@ -58,10 +58,10 @@ function Dashboard() {
         <div>
           <div className="text-xs uppercase tracking-wider text-muted-foreground">{greet}</div>
           <div className="font-display text-2xl font-extrabold mt-0.5">
-            {profile?.display_name ?? "Warrior"} 🐅
+            {profile?.display_name ?? "Runner"}
           </div>
           <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-            <MapPin className="h-3 w-3" /> {profile?.city ?? "India"}
+            <MapPin className="h-3 w-3" /> {profile?.city ?? "Worldwide"}
           </div>
         </div>
         <div className="text-right">
@@ -82,10 +82,10 @@ function Dashboard() {
         </div>
         <div className="card-tactical p-4">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Calendar className="h-3.5 w-3.5 text-india-green" /> MATCH DAY
+            <Calendar className="h-3.5 w-3.5 text-india-green" /> EVENT
           </div>
           <div className="mt-1 text-base font-extrabold text-india-green">2× XP active</div>
-          <div className="text-[10px] text-muted-foreground">Bleed Blue today 💙</div>
+          <div className="text-[10px] text-muted-foreground">Weekend boost on 🔥</div>
         </div>
       </div>
 
@@ -124,7 +124,7 @@ function Dashboard() {
           <div key={r.id} className="card-tactical p-4 flex items-center justify-between">
             <div>
               <div className="font-bold">{r.distance_km.toFixed(2)} km</div>
-              <div className="text-xs text-muted-foreground">{new Date(r.started_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</div>
+              <div className="text-xs text-muted-foreground">{new Date(r.started_at).toLocaleDateString(undefined, { day: "numeric", month: "short" })}</div>
             </div>
             <div className="text-right">
               <div className="text-sm font-bold text-india-green">{(r.area_captured_m2 / 1e6).toFixed(3)} km²</div>
@@ -159,9 +159,9 @@ function Stat({ label, value, unit }: { label: string; value: string; unit: stri
 
 function greeting() {
   const h = new Date().getHours();
-  if (h < 5) return "Late night warrior";
-  if (h < 12) return "Subah ka shor";
-  if (h < 17) return "Dopahar ki dhoop";
-  if (h < 20) return "Shaam ka shikar";
-  return "Raat ka raja";
+  if (h < 5) return "Late night runner";
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  if (h < 20) return "Good evening";
+  return "Night owl";
 }
