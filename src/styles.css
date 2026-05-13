@@ -121,7 +121,15 @@
 
 /* Leaflet dark tweaks */
 .leaflet-container { background: oklch(0.14 0.03 270); }
-.leaflet-tile { filter: hue-rotate(190deg) invert(1) contrast(0.85) brightness(0.95) saturate(0.7); }
+.leaflet-tile { filter: saturate(1.05) contrast(1.05); }
+.leaflet-fade-anim .leaflet-tile { will-change: opacity; }
+.leaflet-pane > svg path { transition: stroke-opacity .2s ease, fill-opacity .2s ease; }
+
+@keyframes terra-pulse {
+  0%   { transform: scale(0.6); opacity: 0.85; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.terra-pulse { animation: terra-pulse 1.6s ease-out infinite; transform-origin: center; }
 .leaflet-control-attribution { background: oklch(0.20 0.03 270 / 0.7) !important; color: oklch(0.7 0.02 270) !important; }
 .leaflet-control-attribution a { color: oklch(0.78 0.10 45) !important; }
 
