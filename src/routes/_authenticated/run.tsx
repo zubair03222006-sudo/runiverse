@@ -25,7 +25,20 @@ function RunPage() {
   const tracker = useGeoTracker();
   const [mounted, setMounted] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [follow, setFollow] = useState(true);
   useEffect(() => setMounted(true), []);
+
+  // GPS signal quality from accuracy (m)
+  const acc = tracker.accuracy ?? null;
+  const signal: { label: string; tone: string } =
+    acc == null
+      ? { label: "Searching…", tone: "text-muted-foreground" }
+      : acc <= 10
+      ? { label: "Strong GPS", tone: "text-india-green" }
+      : acc <= 25
+      ? { label: "Good GPS", tone: "text-gold" }
+      : { label: "Weak GPS", tone: "text-danger" };
+  const speedKmh = tracker.speed != null ? Math.max(0, tracker.speed * 3.6) : null;
 
   const path: LatLng[] = useMemo(
     () => tracker.points.map((p) => ({ lat: p.lat, lng: p.lng })),
