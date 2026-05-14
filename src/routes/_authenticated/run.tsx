@@ -249,7 +249,7 @@ function RunPage() {
 
       {/* Bottom controls */}
       <div className="absolute bottom-0 inset-x-0 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-        <div className="card-tactical p-4">
+        <div className={`card-tactical p-4 transition-all ${fullscreen ? "bg-card/70 backdrop-blur-md" : ""}`}>
           {tracker.state === "idle" ? (
             <div className="flex items-center gap-3">
               <button
