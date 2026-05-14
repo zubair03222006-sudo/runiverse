@@ -12,7 +12,7 @@ import {
 } from "@/lib/geo";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/use-auth";
-import { Pause, Play, Square, X, Crosshair, Satellite } from "lucide-react";
+import { Pause, Play, Square, X, Crosshair, Satellite, Maximize2, Minimize2, Trophy } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/run")({
