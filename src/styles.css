@@ -139,3 +139,50 @@
   100% { box-shadow: 0 0 0 0 oklch(0.72 0.19 45 / 0); }
 }
 .pulse-ring { animation: pulse-ring 1.8s infinite; }
+
+/* Animated territory painting */
+@keyframes territory-paint {
+  0%   { fill-opacity: 0.10; stroke-opacity: 0.55; }
+  50%  { fill-opacity: 0.38; stroke-opacity: 1; }
+  100% { fill-opacity: 0.10; stroke-opacity: 0.55; }
+}
+.leaflet-pane > svg path.draft-territory {
+  animation: territory-paint 2.2s ease-in-out infinite;
+  stroke-dasharray: 8 6;
+  animation-name: territory-paint, draft-march;
+  animation-duration: 2.2s, 1.2s;
+  animation-timing-function: ease-in-out, linear;
+  animation-iteration-count: infinite, infinite;
+}
+@keyframes draft-march {
+  to { stroke-dashoffset: -28; }
+}
+@keyframes territory-claim {
+  0%   { fill-opacity: 0; stroke-opacity: 0; transform: scale(0.92); }
+  60%  { fill-opacity: 0.55; stroke-opacity: 1; transform: scale(1.02); }
+  100% { fill-opacity: 0.28; stroke-opacity: 1; transform: scale(1); }
+}
+.leaflet-pane > svg path.claim-flash {
+  animation: territory-claim 900ms ease-out 1;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* Capture banner */
+@keyframes capture-pop {
+  0%   { transform: translateY(-12px) scale(0.96); opacity: 0; }
+  60%  { transform: translateY(2px) scale(1.02); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.capture-pop { animation: capture-pop 480ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes sweep-shine {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(220%); }
+}
+.sweep-shine::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+  animation: sweep-shine 2.4s linear infinite;
+  pointer-events: none;
+}
