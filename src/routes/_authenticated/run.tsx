@@ -108,12 +108,18 @@ function RunPage() {
         })
         .eq("id", user.id);
 
-      toast.success(
-        area_m2 > 0
-          ? `Captured ${(area_m2 / 1e6).toFixed(3)} km² 🏆`
-          : "Run saved! No loop closed this time."
-      );
-      navigate({ to: "/dashboard" });
+      if (area_m2 > 0) {
+        const km2 = area_m2 / 1e6;
+        setCaptureBurst({ km2 });
+        toast.success(`Territory captured: ${km2.toFixed(3)} km²`, {
+          description: "Added to your conquests.",
+          duration: 2200,
+        });
+        setTimeout(() => navigate({ to: "/dashboard" }), 1900);
+      } else {
+        toast.message("Run saved", { description: "No loop closed this time." });
+        navigate({ to: "/dashboard" });
+      }
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
