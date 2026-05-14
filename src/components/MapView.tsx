@@ -139,10 +139,15 @@ export function MapView({
     territories.forEach((t) => {
       if (t.polygon.length < 3) return;
       const color = t.ownedByMe ? "#138808" : "#FF3355";
-      L.polygon(
+      const poly = L.polygon(
         t.polygon.map((p) => [p.lat, p.lng] as L.LatLngTuple),
-        { color, weight: 2, fillColor: color, fillOpacity: 0.28 }
+        { color, weight: 2, fillColor: color, fillOpacity: 0.28, className: "claim-flash" }
       ).addTo(layer);
+      // Strip animation class after the claim flash so re-renders don't re-trigger
+      setTimeout(() => {
+        const el = (poly as unknown as { _path?: SVGPathElement })._path;
+        if (el) el.classList.remove("claim-flash");
+      }, 950);
     });
 
     if (trackPath.length > 1) {
@@ -160,8 +165,9 @@ export function MapView({
       L.polygon(
         draftPolygon.map((p) => [p.lat, p.lng] as L.LatLngTuple),
         {
-          color: "#FFD166", weight: 2, dashArray: "6,6",
-          fillColor: "#FFD166", fillOpacity: 0.18,
+          color: "#FFD166", weight: 2.5,
+          fillColor: "#FFD166", fillOpacity: 0.22,
+          className: "draft-territory",
         }
       ).addTo(layer);
     }
