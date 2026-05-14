@@ -26,6 +26,8 @@ function RunPage() {
   const [mounted, setMounted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [follow, setFollow] = useState(true);
+  const [fullscreen, setFullscreen] = useState(false);
+  const [captureBurst, setCaptureBurst] = useState<{ km2: number } | null>(null);
   useEffect(() => setMounted(true), []);
 
   // GPS signal quality from accuracy (m)
