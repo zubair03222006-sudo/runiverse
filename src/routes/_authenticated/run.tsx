@@ -212,6 +212,36 @@ function RunPage() {
             </button>
           </div>
 
+          {/* GPS Confidence meter */}
+          <div className="mt-2 card-tactical p-2.5 backdrop-blur-md bg-card/70">
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center gap-1.5">
+                {warmingUp ? (
+                  <Loader2 className="h-3.5 w-3.5 text-muted-foreground animate-spin" />
+                ) : captureReady ? (
+                  <ShieldCheck className="h-3.5 w-3.5 text-india-green" />
+                ) : (
+                  <ShieldAlert className="h-3.5 w-3.5 text-danger" />
+                )}
+                <span className="text-[11px] font-semibold uppercase tracking-wider">
+                  {warmingUp ? "Locking GPS…" : captureReady ? "Capture-ready" : "Not reliable for capture"}
+                </span>
+              </div>
+              <span className={`text-[11px] font-bold tabular-nums ${signal.tone}`}>{confidencePct}%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-surface-2 overflow-hidden">
+              <div
+                className={`h-full ${signal.bar} transition-all duration-500 ease-out`}
+                style={{ width: `${confidencePct}%` }}
+              />
+            </div>
+            {!warmingUp && !captureReady && (
+              <div className="mt-1.5 text-[10px] text-muted-foreground">
+                Move to open sky. Territory capture needs ±15m or better.
+              </div>
+            )}
+          </div>
+
           {tracker.error && (
             <div className="mt-2 text-xs text-danger bg-danger/15 border border-danger/30 rounded-lg px-3 py-2">
               GPS error: {tracker.error}. Allow location access.
