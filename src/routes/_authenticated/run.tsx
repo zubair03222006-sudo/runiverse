@@ -350,11 +350,22 @@ function RunPage() {
                 <X className="h-5 w-5" />
               </button>
               <button
-                onClick={tracker.start}
-                className="flex-1 grad-saffron text-primary-foreground font-extrabold uppercase tracking-wide rounded-full py-4 glow-saffron flex items-center justify-center gap-2"
+                onClick={() => {
+                  if (warmingUp) {
+                    toast.message("Waiting for GPS lock", { description: "Hang on a moment for a reliable fix." });
+                    return;
+                  }
+                  if (!captureReady) {
+                    toast.warning("Weak GPS signal", {
+                      description: `Accuracy ±${Math.round(acc!)}m. Run will track, but territory may be imprecise.`,
+                    });
+                  }
+                  tracker.start();
+                }}
+                className={`flex-1 font-extrabold uppercase tracking-wide rounded-full py-4 flex items-center justify-center gap-2 transition-all ${warmingUp ? "bg-surface-2 text-muted-foreground" : "grad-saffron text-primary-foreground glow-saffron"}`}
               >
-                <Play className="h-5 w-5" />
-                Start Run
+                {warmingUp ? <Loader2 className="h-5 w-5 animate-spin" /> : <Play className="h-5 w-5" />}
+                {warmingUp ? "Locking GPS…" : "Start Run"}
               </button>
             </div>
           ) : (
