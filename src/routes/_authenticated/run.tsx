@@ -12,7 +12,7 @@ import {
 } from "@/lib/geo";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/use-auth";
-import { Pause, Play, Square, X, Crosshair, Satellite, Maximize2, Minimize2, Trophy } from "lucide-react";
+import { Pause, Play, Square, X, Crosshair, Satellite, Maximize2, Minimize2, Trophy, ShieldCheck, ShieldAlert, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/run")({
@@ -30,16 +30,23 @@ function RunPage() {
   const [captureBurst, setCaptureBurst] = useState<{ km2: number } | null>(null);
   useEffect(() => setMounted(true), []);
 
-  // GPS signal quality from accuracy (m)
+  // GPS signal quality from accuracy (m). Lower is better.
+  // Thresholds: <=8m excellent, <=15m good (capture-ready), <=25m fair, >25m poor.
   const acc = tracker.accuracy ?? null;
-  const signal: { label: string; tone: string } =
+  const fixCount = tracker.points.length + (tracker.current ? 1 : 0);
+  const warmingUp = acc == null || fixCount < 3;
+  const captureReady = acc != null && acc <= 15;
+  const confidencePct = acc == null ? 0 : Math.max(0, Math.min(100, Math.round(100 - (acc - 5) * 2.5)));
+  const signal: { label: string; tone: string; bar: string } =
     acc == null
-      ? { label: "Searching…", tone: "text-muted-foreground" }
-      : acc <= 10
-      ? { label: "Strong GPS", tone: "text-india-green" }
+      ? { label: "Searching…", tone: "text-muted-foreground", bar: "bg-muted-foreground" }
+      : acc <= 8
+      ? { label: "Excellent", tone: "text-india-green", bar: "bg-india-green" }
+      : acc <= 15
+      ? { label: "Good", tone: "text-india-green", bar: "bg-india-green" }
       : acc <= 25
-      ? { label: "Good GPS", tone: "text-gold" }
-      : { label: "Weak GPS", tone: "text-danger" };
+      ? { label: "Fair", tone: "text-gold", bar: "bg-gold" }
+      : { label: "Poor", tone: "text-danger", bar: "bg-danger" };
   const speedKmh = tracker.speed != null ? Math.max(0, tracker.speed * 3.6) : null;
 
   const path: LatLng[] = useMemo(
@@ -205,6 +212,36 @@ function RunPage() {
             </button>
           </div>
 
+          {/* GPS Confidence meter */}
+          <div className="mt-2 card-tactical p-2.5 backdrop-blur-md bg-card/70">
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center gap-1.5">
+                {warmingUp ? (
+                  <Loader2 className="h-3.5 w-3.5 text-muted-foreground animate-spin" />
+                ) : captureReady ? (
+                  <ShieldCheck className="h-3.5 w-3.5 text-india-green" />
+                ) : (
+                  <ShieldAlert className="h-3.5 w-3.5 text-danger" />
+                )}
+                <span className="text-[11px] font-semibold uppercase tracking-wider">
+                  {warmingUp ? "Locking GPS…" : captureReady ? "Capture-ready" : "Not reliable for capture"}
+                </span>
+              </div>
+              <span className={`text-[11px] font-bold tabular-nums ${signal.tone}`}>{confidencePct}%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-surface-2 overflow-hidden">
+              <div
+                className={`h-full ${signal.bar} transition-all duration-500 ease-out`}
+                style={{ width: `${confidencePct}%` }}
+              />
+            </div>
+            {!warmingUp && !captureReady && (
+              <div className="mt-1.5 text-[10px] text-muted-foreground">
+                Move to open sky. Territory capture needs ±15m or better.
+              </div>
+            )}
+          </div>
+
           {tracker.error && (
             <div className="mt-2 text-xs text-danger bg-danger/15 border border-danger/30 rounded-lg px-3 py-2">
               GPS error: {tracker.error}. Allow location access.
@@ -243,6 +280,17 @@ function RunPage() {
             {/* Time */}
             <div className="pill bg-card/60 backdrop-blur-md border border-border">
               <span className="font-semibold text-xs tabular-nums">{formatDuration(tracker.seconds)}</span>
+            </div>
+            {/* Confidence chip */}
+            <div className={`pill bg-card/60 backdrop-blur-md border ${captureReady ? "border-india-green/50" : "border-danger/40"}`}>
+              {warmingUp ? (
+                <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />
+              ) : captureReady ? (
+                <ShieldCheck className="h-3 w-3 text-india-green" />
+              ) : (
+                <ShieldAlert className="h-3 w-3 text-danger" />
+              )}
+              <span className={`font-semibold text-xs tabular-nums ${signal.tone}`}>{confidencePct}%</span>
             </div>
             {/* Follow toggle */}
             <button
@@ -302,11 +350,22 @@ function RunPage() {
                 <X className="h-5 w-5" />
               </button>
               <button
-                onClick={tracker.start}
-                className="flex-1 grad-saffron text-primary-foreground font-extrabold uppercase tracking-wide rounded-full py-4 glow-saffron flex items-center justify-center gap-2"
+                onClick={() => {
+                  if (warmingUp) {
+                    toast.message("Waiting for GPS lock", { description: "Hang on a moment for a reliable fix." });
+                    return;
+                  }
+                  if (!captureReady) {
+                    toast.warning("Weak GPS signal", {
+                      description: `Accuracy ±${Math.round(acc!)}m. Run will track, but territory may be imprecise.`,
+                    });
+                  }
+                  tracker.start();
+                }}
+                className={`flex-1 font-extrabold uppercase tracking-wide rounded-full py-4 flex items-center justify-center gap-2 transition-all ${warmingUp ? "bg-surface-2 text-muted-foreground" : "grad-saffron text-primary-foreground glow-saffron"}`}
               >
-                <Play className="h-5 w-5" />
-                Start Run
+                {warmingUp ? <Loader2 className="h-5 w-5 animate-spin" /> : <Play className="h-5 w-5" />}
+                {warmingUp ? "Locking GPS…" : "Start Run"}
               </button>
             </div>
           ) : (
