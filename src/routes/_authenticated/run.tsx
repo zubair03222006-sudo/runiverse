@@ -30,16 +30,23 @@ function RunPage() {
   const [captureBurst, setCaptureBurst] = useState<{ km2: number } | null>(null);
   useEffect(() => setMounted(true), []);
 
-  // GPS signal quality from accuracy (m)
+  // GPS signal quality from accuracy (m). Lower is better.
+  // Thresholds: <=8m excellent, <=15m good (capture-ready), <=25m fair, >25m poor.
   const acc = tracker.accuracy ?? null;
-  const signal: { label: string; tone: string } =
+  const fixCount = tracker.points.length + (tracker.current ? 1 : 0);
+  const warmingUp = acc == null || fixCount < 3;
+  const captureReady = acc != null && acc <= 15;
+  const confidencePct = acc == null ? 0 : Math.max(0, Math.min(100, Math.round(100 - (acc - 5) * 2.5)));
+  const signal: { label: string; tone: string; bar: string } =
     acc == null
-      ? { label: "Searching…", tone: "text-muted-foreground" }
-      : acc <= 10
-      ? { label: "Strong GPS", tone: "text-india-green" }
+      ? { label: "Searching…", tone: "text-muted-foreground", bar: "bg-muted-foreground" }
+      : acc <= 8
+      ? { label: "Excellent", tone: "text-india-green", bar: "bg-india-green" }
+      : acc <= 15
+      ? { label: "Good", tone: "text-india-green", bar: "bg-india-green" }
       : acc <= 25
-      ? { label: "Good GPS", tone: "text-gold" }
-      : { label: "Weak GPS", tone: "text-danger" };
+      ? { label: "Fair", tone: "text-gold", bar: "bg-gold" }
+      : { label: "Poor", tone: "text-danger", bar: "bg-danger" };
   const speedKmh = tracker.speed != null ? Math.max(0, tracker.speed * 3.6) : null;
 
   const path: LatLng[] = useMemo(
