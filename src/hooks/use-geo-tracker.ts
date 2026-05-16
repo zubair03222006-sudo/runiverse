@@ -28,8 +28,15 @@ export function useGeoTracker() {
     const id = navigator.geolocation.watchPosition(
       (pos) => {
         const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        setCurrent(p);
-        setAccuracy(pos.coords.accuracy ?? null);
+        const a = pos.coords.accuracy ?? null;
+        // Reject obviously bad first/early fixes (often a stale IP/wifi guess
+        // hundreds of meters off). Once we have any current location, allow
+        // updates through so movement is tracked even with weaker accuracy.
+        setCurrent((prev) => {
+          if (prev == null && a != null && a > 100) return prev;
+          return p;
+        });
+        setAccuracy(a);
         if (pos.coords.heading != null && !Number.isNaN(pos.coords.heading)) {
           setHeading(pos.coords.heading);
         }
