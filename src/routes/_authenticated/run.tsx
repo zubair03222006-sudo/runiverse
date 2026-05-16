@@ -281,6 +281,17 @@ function RunPage() {
             <div className="pill bg-card/60 backdrop-blur-md border border-border">
               <span className="font-semibold text-xs tabular-nums">{formatDuration(tracker.seconds)}</span>
             </div>
+            {/* Confidence chip */}
+            <div className={`pill bg-card/60 backdrop-blur-md border ${captureReady ? "border-india-green/50" : "border-danger/40"}`}>
+              {warmingUp ? (
+                <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />
+              ) : captureReady ? (
+                <ShieldCheck className="h-3 w-3 text-india-green" />
+              ) : (
+                <ShieldAlert className="h-3 w-3 text-danger" />
+              )}
+              <span className={`font-semibold text-xs tabular-nums ${signal.tone}`}>{confidencePct}%</span>
+            </div>
             {/* Follow toggle */}
             <button
               onClick={() => setFollow((f) => !f)}
