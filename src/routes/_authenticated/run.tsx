@@ -213,10 +213,53 @@ function RunPage() {
         </div>
       )}
 
-      {/* Loop-closed alert — visible in both modes, animates in */}
+      {/* Minimal fullscreen HUD */}
+      {fullscreen && (
+        <div className="absolute top-0 inset-x-0 z-20 p-4 pt-[max(1rem,env(safe-area-inset-top))] pr-16 animate-fade-in">
+          <div className="flex items-center gap-2">
+            {/* GPS pill */}
+            <div className={`pill bg-card/60 backdrop-blur-md border border-border ${signal.tone}`}>
+              <Satellite className="h-3 w-3" />
+              <span className="font-semibold text-xs">{signal.label}</span>
+              {acc != null && (
+                <span className="text-muted-foreground font-normal text-[10px]">±{Math.round(acc)}m</span>
+              )}
+              {tracker.state === "running" && (
+                <span className="ml-1 inline-block w-1.5 h-1.5 rounded-full bg-india-green animate-pulse" />
+              )}
+            </div>
+            {/* Speed / Pace */}
+            <div className="pill bg-card/60 backdrop-blur-md border border-border">
+              <span className="font-semibold text-xs text-saffron">
+                {speedKmh != null && tracker.state === "running"
+                  ? `${speedKmh.toFixed(1)} km/h`
+                  : formatPace(distanceKm, tracker.seconds)}
+              </span>
+            </div>
+            {/* Distance */}
+            <div className="pill bg-card/60 backdrop-blur-md border border-border">
+              <span className="font-semibold text-xs tabular-nums">{distanceKm.toFixed(2)} km</span>
+            </div>
+            {/* Time */}
+            <div className="pill bg-card/60 backdrop-blur-md border border-border">
+              <span className="font-semibold text-xs tabular-nums">{formatDuration(tracker.seconds)}</span>
+            </div>
+            {/* Follow toggle */}
+            <button
+              onClick={() => setFollow((f) => !f)}
+              className={`h-8 w-8 rounded-full flex items-center justify-center border transition-all hover-scale ${follow ? "bg-saffron/20 border-saffron/50 text-saffron" : "bg-card/60 backdrop-blur-md border-border"}`}
+              aria-label={follow ? "Following" : "Recenter"}
+            >
+              <Crosshair className={`h-3.5 w-3.5 ${follow ? "animate-pulse" : ""}`} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Loop-closed alert — visible in both modes */}
       {closed && tracker.state === "running" && (
         <div
-          className={`absolute z-20 inset-x-4 ${fullscreen ? "top-[max(1rem,env(safe-area-inset-top))]" : "top-[210px]"} pr-16`}
+          className={`absolute z-20 inset-x-4 ${fullscreen ? "top-[calc(max(1rem,env(safe-area-inset-top))+48px)]" : "top-[210px]"} pr-16`}
         >
           <div className="capture-pop card-tactical p-3 glow-green border-india-green/60 flex items-center gap-3 backdrop-blur-md bg-card/80 relative overflow-hidden sweep-shine">
             <div className="text-2xl">🎯</div>
@@ -293,6 +336,22 @@ function RunPage() {
           </div>
         </div>
       </div>
+
+      {/* Floating Finish button in fullscreen (overrides bottom bar) */}
+      {fullscreen && tracker.state !== "idle" && (
+        <div className="absolute z-30 bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-0 right-0 px-5 pointer-events-none">
+          <div className="flex justify-center pointer-events-auto">
+            <button
+              onClick={() => finishRun(true)}
+              disabled={saving}
+              className="grad-saffron text-primary-foreground font-extrabold uppercase tracking-wide rounded-full py-3 px-8 glow-saffron flex items-center justify-center gap-2 disabled:opacity-60 text-sm shadow-2xl"
+            >
+              <Square className="h-4 w-4" />
+              {saving ? "Saving…" : closed ? "Capture & Finish" : "Finish Run"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
